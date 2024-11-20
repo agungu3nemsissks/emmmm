@@ -1,0 +1,594 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special One ✨</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(45deg, #c8e6c9, #a5d6a7);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #2e7d32;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin: 1.5rem 0;
+            color: #1b5e20;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .message-box {
+            background: rgba(255,255,255,0.95);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            margin: 1rem 0;
+            transition: transform 0.3s;
+        }
+
+        .message-box:hover {
+            transform: translateY(-5px);
+        }
+
+        .button {
+            background: #81c784;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin: 0.5rem;
+            transition: all 0.3s;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .button:hover {
+            background: #66bb6a;
+            transform: scale(1.05);
+        }
+
+        .floating-items {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .compliment {
+            font-size: 1.3rem;
+            margin: 1rem 0;
+            color: #2e7d32;
+        }
+
+        .mood-meter {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .mood-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .mood-button {
+            font-size: 1.8rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s;
+            padding: 0.5rem;
+        }
+
+        .mood-button:hover {
+            transform: scale(1.2);
+        }
+
+        .memory-game {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 1rem 0;
+        }
+
+        .memory-card {
+            background: #81c784;
+            height: 80px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .memory-card.flipped {
+            background: white;
+        }
+
+        .wish-wall {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 1rem 0;
+            justify-content: center;
+        }
+
+        .wish-note {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            transform: rotate(var(--rotation));
+            font-size: 0.9rem;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            max-width: 150px;
+        }
+
+        .popup-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+        }
+
+        .shake-effect {
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        #virtual-hug {
+            width: 100px;
+            height: 100px;
+            background: #81c784;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 1rem auto;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        #virtual-hug:hover {
+            transform: scale(1.1);
+        }
+
+        .typing-effect {
+            overflow: hidden;
+            border-right: 2px solid #2e7d32;
+            white-space: nowrap;
+            margin: 0 auto;
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #2e7d32 }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 0.8rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .button {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.9rem;
+            }
+
+            .memory-game {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .memory-card {
+                height: 70px;
+            }
+        }
+
+        .pop-animation {
+            animation: pop 0.3s ease-out;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .hastri-message {
+            background-color: #f1f8e9;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+            text-align: center;
+            animation: pop 0.5s ease-out;
+        }
+
+        .hastri-message h2 {
+            color: #2e7d32;
+            margin-bottom: 1rem;
+        }
+
+        .hastri-message p {
+            color: #424242;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-items"></div>
+    
+    <div class="container">
+        <h1 class="typing-effect">Halo anak kecill! ✨</h1>
+        
+        <div class="message-box">
+            <p>Kadang kita butuh diingatkan...</p>
+            <p>kalau kita itu luar biasa apa adanya! 💚</p>
+        </div>
+
+        <div class="hastri-message">
+            <h2>Untuk anak kecill siska putri yang Sedang Bad Mood...</h2>
+            <p> aku tahu kamu lagi nggak mood. Tapi jangan lupa ya, kamu itu luar biasa! Senyummu bisa bikin hari kamu lebih cerah. Semangat terus ya, anak kecill! 💚</p>
+        </div>
+
+        <div class="mood-meter">
+            <h2>Gimana perasaanmu sekarang?</h2>
+            <div class="mood-buttons">
+                <button class="mood-button" onclick="handleMood('😔')">😔</button>
+                <button class="mood-button" onclick="handleMood('😐')">😐</button>
+                <button class="mood-button" onclick="handleMood('🙂')">🙂</button>
+                <button class="mood-button" onclick="handleMood('😊')">😊</button>
+            </div>
+        </div>
+
+        <div id="virtual-hug" onclick="sendVirtualHug()">🤗</div>
+
+        <button class="button" onclick="showCompliment()">Butuh Senyuman?</button>
+        <button class="button" onclick="createFloatingItems()">Tebar Kebahagiaan ✨</button>
+        <button class="button" onclick="toggleMemoryGame()">Main Game Yuk! 🎮</button>
+        <button class="button" onclick="addWish()">Tambah Harapan 💭</button>
+
+        <div class="memory-game" id="memory-game" style="display: none;">
+            <!-- Cards will be added here -->
+        </div>
+
+        <div class="wish-wall" id="wish-wall">
+            <!-- Wishes will be added here -->
+        </div>
+
+        <div class="music-controls" style="position: fixed; bottom: 20px; right: 20px; background: rgba(255,255,255,0.9); padding: 10px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+            <button id="playButton" class="button" style="margin: 0;">
+                🎵 Play Music
+            </button>
+            <audio id="bgMusic" loop>
+                <source src="lagu.mp3" type="audio/mp3">
+                Browser Anda tidak mendukung elemen audio.
+            </audio>
+        </div>
+        
+    </div>
+
+    <div class="popup-message" id="popup">
+        <p id="popup-text"></p>
+        <button class="button" onclick="closePopup()">Close</button>
+    </div>
+
+    <script>
+      const audio = document.getElementById('bgMusic');
+        const playButton = document.getElementById('playButton');
+        let isPlaying = false;
+
+        playButton.addEventListener('click', function() {
+            if (isPlaying) {
+                audio.pause();
+                playButton.textContent = '🎵 Play Music';
+                isPlaying = false;
+            } else {
+                audio.play()
+                    .then(() => {
+                        playButton.textContent = '🎵 Pause Music';
+                        isPlaying = true;
+                    })
+                    .catch(error => {
+                        console.log("Audio play failed:", error);
+                        showPopup("Maaf, ada masalah dalam memutar musik 😔");
+                    });
+            }
+        });
+
+        // Start playing music on first user interaction
+        document.body.addEventListener('click', function() {
+            if (!isPlaying) {
+                audio.play()
+                    .catch(error => {
+                        console.log("Audio play failed:", error);
+                        showPopup("Maaf, ada masalah dalam memutar musik 😔");
+                    });
+                isPlaying = true;
+                playButton.textContent = '🎵 Pause Music';
+            }
+        }, { once: true });
+        // Global variables
+        let flippedCards = [];
+        let matchedPairs = 0;
+        const emojis = ['🌸', '🍀', '💚', '✨', '🌟', '🦋', '🌺', '🎈'];
+
+        // Compliments array
+        const compliments = [
+            "Senyummu itu bisa mencerahkan hari siapapun! ✨",
+            "Kamu membuat dunia jadi tempat yang lebih baik! 💚",
+            "Kamu lebih kuat dari yang kamu tahu! 💪",
+            "Setiap bagian dari dirimu itu berharga! 🌟",
+            "Kamu selalu bisa membuat orang di sekitarmu bahagia! ⭐",
+            "Kamu itu luar biasa, jangan lupa ya! 💝",
+            "Kehadiranmu membuat segalanya lebih baik! 🌺",
+            "Kamu pantas mendapatkan semua kebahagiaan di dunia! 🎉"
+        ];
+
+        // Wishes array
+        const wishes = [
+            "Hope you're having the best day! 💚",
+            "Stay amazing as you are! ✨",
+            "You light up everyone's day! 🌟",
+            "Keep being wonderful! 🦋"
+        ];
+
+        function showCompliment() {
+            const messageBox = document.querySelector('.message-box');
+            const randomCompliment = compliments[Math.floor(Math.random() * compliments.length)];
+            messageBox.innerHTML = `<p class="compliment">${randomCompliment}</p>`;
+            gsap.from('.compliment', {
+                y: 20,
+                opacity: 0,
+                duration: 0.5
+            });
+        }
+
+        function createFloatingItem() {
+            const items = ['🌸', '🍀', '💚', '✨', '🌟', '🦋', '🌺'];
+            const item = document.createElement('div');
+            item.innerHTML = items[Math.floor(Math.random() * items.length)];
+            item.style.position = 'fixed';
+            item.style.left = Math.random() * 100 + 'vw';
+            item.style.top = '100vh';
+            item.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            document.querySelector('.floating-items').appendChild(item);
+
+            gsap.to(item, {
+                y: -window.innerHeight - 100,
+                x: Math.random() * 100 - 50,
+                rotation: Math.random() * 360,
+                duration: Math.random() * 3 + 2,
+                ease: 'power1.out',
+                onComplete: () => item.remove()
+            });
+        }
+
+        function createFloatingItems() {
+            for(let i = 0; i < 15; i++) {
+                setTimeout(createFloatingItem, i * 100);
+            }
+        }
+
+        function handleMood(mood) {
+            const message = document.querySelector('.message-box');
+            message.classList.add('shake-effect');
+            setTimeout(() => message.classList.remove('shake-effect'), 500);
+
+            switch(mood) {
+                case '😔':
+                    message.innerHTML = "<p class='pop-animation'>Hey sayang, ga apa-apa kok kalau lagi sedih. Ingat ya, setelah hujan pasti ada pelangi! 🌈</p>";
+                    createFloatingItems();
+                    break;
+                case '😐':
+                    message.innerHTML = "<p class='pop-animation'>Yuk bikin mood kamu lebih baik! Kamu pasti bisa! ✨</p>";
+                    break;
+                case '🙂':
+                    message.innerHTML = "<p class='pop-animation'>Nah gitu dong! Senyummu itu berharga tau! 💚</p>";
+                    break;
+                case '😊':
+                    message.innerHTML = "<p class='pop-animation'>Bahagiamu itu menular! Tebar terus ya energi positifnya! 🎉</p>";
+                    createFloatingItems();
+                    break;
+            }
+        }
+
+        function toggleMemoryGame() {
+            const gameDiv = document.getElementById('memory-game');
+            if (gameDiv.style.display === 'none') {
+                gameDiv.style.display = 'grid';
+                showPopup('Ayo main! Temukan pasangan kartu yang sama! 🎮');
+                initializeMemoryGame();
+            } else {
+                gameDiv.style.display = 'none';
+            }
+        }
+
+        function initializeMemoryGame() {
+            const gameDiv = document.getElementById('memory-game');
+            gameDiv.innerHTML = '';
+            matchedPairs = 0;
+            flippedCards = [];
+
+            const emojiPairs = [...emojis, ...emojis];
+            for(let i = emojiPairs.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [emojiPairs[i], emojiPairs[j]] = [emojiPairs[j], emojiPairs[i]];
+            }
+
+            emojiPairs.forEach((emoji, index) => {
+                const card = document.createElement('div');
+                card.classList.add('memory-card');
+                card.dataset.emoji = emoji;
+                card.dataset.index = index;
+                card.innerHTML = '?';
+                card.onclick = () => flipCard(card);
+                gameDiv.appendChild(card);
+            });
+        }
+
+        function flipCard(card) {
+            if(flippedCards.length === 2 || card.classList.contains('flipped')) return;
+
+            card.classList.add('flipped');
+            card.innerHTML = card.dataset.emoji;
+            flippedCards.push(card);
+
+            if(flippedCards.length === 2) {
+                setTimeout(checkMatch, 500);
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            if(card1.dataset.emoji === card2.dataset.emoji) {
+                matchedPairs++;
+                if(matchedPairs === emojis.length) {
+                    showPopup('Selamat! Kamu menang! 🎉');
+                    createFloatingItems();
+                }
+            } else {
+                setTimeout(() => {
+                    card1.classList.remove('flipped');
+                    card2.classList.remove('flipped');
+                    card1.innerHTML = '?';
+                    card2.innerHTML = '?';
+                }, 500);
+            }
+            flippedCards = [];
+        }
+
+        function sendVirtualHug() {
+            const hug = document.getElementById('virtual-hug');
+            hug.style.transform = 'scale(1.5)';
+            setTimeout(() => hug.style.transform = 'scale(1)', 300);
+            showPopup('Peluk jauh untukmu! 🤗💚');
+            createFloatingItems();
+        }
+
+        function addWish() {
+            const wall = document.getElementById('wish-wall');
+            const randomWish = wishes[Math.floor(Math.random() * wishes.length)];
+            const wish = document.createElement('div');
+            wish.className = 'wish-note';
+            wish.style.setProperty('--rotation', (Math.random() * 10 - 5) + 'deg');
+            wish.textContent = randomWish;
+            
+            gsap.from(wish, {
+                scale: 0,
+                opacity: 0,
+                duration: 0.5,
+                ease: 'back.out'
+            });
+            
+            wall.appendChild(wish);
+            createFloatingItems();
+        }
+
+        function showPopup(message) {
+            const popup = document.getElementById('popup');
+            const popupText = document.getElementById('popup-text');
+            popupText.textContent = message;
+            popup.style.display = 'block';
+            gsap.from(popup, {
+                scale: 0.8,
+                opacity: 0,
+                duration: 0.3,
+                ease: 'back.out'
+            });
+        }
+
+        function closePopup() {
+            const popup = document.getElementById('popup');
+            gsap.to(popup, {
+                scale: 0.8,
+                opacity: 0,
+                duration: 0.2,
+                onComplete: () => {
+                    popup.style.display = 'none';
+                    popup.style.opacity = 1;
+                    popup.style.scale = 1;
+                }
+            });
+        }
+
+        // Start initial animations
+        window.addEventListener('DOMContentLoaded', () => {
+            createFloatingItems();
+            
+            // Add initial wishes
+            for(let i = 0; i < 3; i++) {
+                setTimeout(addWish, i * 300);
+            }
+
+            // Start typing animation for title
+            const title = document.querySelector('.typing-effect');
+            title.style.width = '0';
+            gsap.to(title, {
+                width: '100%',
+                duration: 2,
+                ease: 'power1.out'
+            });
+        });
+    </script>
+</body>
+</html>
